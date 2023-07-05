@@ -41,6 +41,27 @@ class ReviewController {
         $stmt->execute();
         return $stmt->rowCount(); // Возвращает количество удаленных записей
     }
+
+    public function addReview($data) {
+        // Проверяем наличие обязательных полей в данных
+        if (!isset($data)) {
+            return ['error' => 'Missing required field: text'];
+        }
+
+        // Получаем текущую дату и время
+        $currentDate = date("Y-m-d");
+        //
+        // Подготавливаем SQL-запрос для добавления отзыва
+        $stmt = $this->pdo->prepare("INSERT INTO reviews (id,text, date_added) VALUES (null,:text,:date_added )");
+        // Привязываем значения параметров
+        $stmt->bindParam(':text', $data);
+        $stmt->bindParam(':date_added', $currentDate);
+
+        // Выполняем запрос
+        $stmt->execute();
+
+        return ['message' => 'Review added successfully'];
+    }
     public function getTotalReviews() {
         $query = $this->pdo->query('SELECT COUNT(*) FROM reviews');
         return $query->fetchColumn();

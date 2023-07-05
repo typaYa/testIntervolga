@@ -4,18 +4,23 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Psr7\Response as ps7;
+
+
 require __DIR__ . '/vendor/autoload.php';
 require 'pdo.php';
-
+$validUsers = [
+    'user1' => 'password1',
+    'user2' => 'password2',
+];
 $app = AppFactory::create();
 $app->addErrorMiddleware(false, true, true);
 
 $reviewController= new ReviewController("C:\\sqlite\\main.db");
 
-$app->get('/', function (Request $request, Response $response, $args) {
-    $response->getBody()->write("Hello world!");
-    return $response;
-});
+
 
 
 $app->get('/api/feedbacks/{id}', function (Request $request, Response $response, $args) use ($reviewController) {
@@ -39,6 +44,18 @@ $app->get('/review/{page}', function (Request $request, Response $response, $arg
     $response->getBody()->write(json_encode($reviews));
     return $response;
 
+});
+
+$app->get('/addReview',function (Request $request, Response $response) use ($reviewController){
+    $text = 'qweqwe';
+    $result = $reviewController->addReview($text);
+
+    if(isset($result['error'])){
+        $response->getBody()->write("Что-то не так");
+    }
+    else{$response->getBody()->write("Добавлено");}
+
+    return $response;
 });
 
 $app->get('/reviewsDelete/{id}', function (Request $request, Response $response, $args) use ($reviewController) {
