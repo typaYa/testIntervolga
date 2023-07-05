@@ -33,6 +33,14 @@ class ReviewController {
 
         return $reviews;
     }
+    public function deleteReviewById($id)
+    {
+        $query = "DELETE FROM reviews WHERE id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->rowCount(); // Возвращает количество удаленных записей
+    }
     public function getTotalReviews() {
         $query = $this->pdo->query('SELECT COUNT(*) FROM reviews');
         return $query->fetchColumn();

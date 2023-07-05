@@ -16,10 +16,7 @@ $app->get('/', function (Request $request, Response $response, $args) {
     $response->getBody()->write("Hello world!");
     return $response;
 });
-$app->get('/qwe', function (Request $request, Response $response, $args) {
-    $response->getBody()->write("Hello world!");
-    return $response;
-});
+
 
 $app->get('/api/feedbacks/{id}', function (Request $request, Response $response, $args) use ($reviewController) {
     $id = $args['id'];
@@ -32,22 +29,30 @@ $app->get('/api/feedbacks/{id}', function (Request $request, Response $response,
     return $response;
 });
 
-$app->get('/reviews/{page}', function (Request $request, Response $response, $args) use ($reviewController) {
+$app->get('/review/{page}', function (Request $request, Response $response, $args) use ($reviewController) {
     $page = $args['page']; // Получаем значение {page} из URL
     $perPage = 20;
 
     $reviews = $reviewController->getReviewsByPage($page, $perPage);
-    $totalReviews = $reviewController->getTotalReviews();
-    $totalPages = ceil($totalReviews / $perPage);
+    //print_r($reviews);
 
-    $responseData = [
-        'reviews' => $reviews,
-        'total_pages' => $totalPages,
-        'current_page' => $page,
-    ];
-
-    $response->getBody()->write(json_encode($responseData));
+    $response->getBody()->write(json_encode($reviews));
     return $response;
+
 });
+
+$app->get('/reviewsDelete/{id}', function (Request $request, Response $response, $args) use ($reviewController) {
+    $id = $args['id'];
+    $result = $reviewController->deleteReviewById($id);
+    if ($result > 0) {
+        // Запись успешно удалена
+        $response->getBody()->write("Успешно");
+        return $response;
+    } else {
+        $response->getBody()->write("Запись с таким id не найдена");
+        return $response;
+    }
+});
+
 $app->run();
 
