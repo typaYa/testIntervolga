@@ -22,11 +22,6 @@ $validUsers = [
 
 // Middleware для BASIC-аутентификации
 
-
-
-
-
-
 $basicAuthMiddleware = function (Request $request, RequestHandlerInterface $handler) use ($validUsers) {
     $response = new ps7();
 
