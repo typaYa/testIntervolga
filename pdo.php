@@ -62,8 +62,9 @@ class ReviewController {
 
         return ['message' => 'Review added successfully'];
     }
-    public function getTotalReviews() {
-        $query = $this->pdo->query('SELECT COUNT(*) FROM reviews');
-        return $query->fetchColumn();
+    public function getAllReviews() {
+        $query = 'SELECT * FROM reviews';
+        $result = $this->pdo->query($query);
+        return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 }

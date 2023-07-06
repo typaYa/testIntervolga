@@ -80,7 +80,7 @@ $app->get('/review/{page}', function (Request $request, Response $response, $arg
 
 });
 
-$app->get('/addReview',function (Request $request, Response $response) use ($reviewController){
+$app->get('/showReview',function (Request $request, Response $response) use ($reviewController){
     $text = 'qweqwe';
     $result = $reviewController->addReview($text);
 
